@@ -3,8 +3,8 @@ import os
 import discord
 from discord.utils import get
 
-TOKEN = os.environ.get('DISCORD_TOKEN')
-GUILD = os.environ.get('DISCORD_GUILD')
+TOKEN = os.getenv('DISCORD_TOKEN')
+GUILD = os.getenv('DISCORD_GUILD')
 
 intents = discord.Intents.default()
 intents.members = True
