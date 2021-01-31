@@ -2,6 +2,7 @@ import os
 
 import discord
 from discord.utils import get
+from discord.ext import commands
 
 from dotenv import load_dotenv
 
@@ -12,7 +13,7 @@ GUILD = os.getenv('DISCORD_GUILD')
 intents = discord.Intents.default()
 intents.members = True
 
-client = discord.Client(intents=intents)
+bot = commands.Bot(command_prefix='.', intents=intents)
 
 def get_members_with_role(guild, role):
     members = []
@@ -86,20 +87,36 @@ async def update_alumni(guild):
         await remove_all_roles(student)
         await kick_and_dm(student)
 
-async def update(guild):
+async def update(guild, ctx):
+    await ctx.send('Админ -> Бивш Админ')
     await update_admins(guild)
+
+    await ctx.send('Казваме ДОВИЖДАНЕ на 12ти клас! :wave:')
     await update_alumni(guild)
+
+    await ctx.send('Добре дошли на следващото ниво!')
     await update_students(guild)
 
-@client.event
+@bot.event
 async def on_ready():
-    guild = get(client.guilds, name=GUILD)
+    guild = get(bot.guilds, name=GUILD)
 
     print(
-        f'{client.user} is connected to the following guild:\n'
-        f'{guild.name}(id: {guild.id})'
+        f'{bot.user} is connected to the following guild:\n'
+        f'{guild.name}(id: {guild.id})\n'
+        f'*** Bot is ready ***'
     )
 
-    # await update(guild)
+@bot.command(name='test')
+async def test(ctx):
+    await ctx.send('Test from TUES BOT!')
 
-client.run(TOKEN)
+@bot.command(name='update')
+async def roles(ctx):
+    guild = get(bot.guilds, name=GUILD)
+
+    await ctx.send('Starting Update!')
+    await update(guild, ctx)
+    await ctx.send('Update finished!')
+
+bot.run(TOKEN, bot=True)
