@@ -4,6 +4,9 @@ import discord
 from discord.utils import get
 from discord.ext import commands
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -36,7 +39,7 @@ async def kick_and_dm(member):
     dm = await member.create_dm()
 
     # TODO: Think of kick dm
-    # await dm.send(f'Hello @{member.name}')
+    # await dm.send(f'Hello, {member.mention}')
     # await dm.send('You have been kicked from the server. Have a nice life :)')
 
     await member.kick(reason='TUES IS OVER.')
@@ -55,47 +58,71 @@ async def update_roles(guild, old_role, new_role):
     else:
         print('No members to update!')
 
-async def update_admins(guild):
+async def update_admins(guild, bot_log):
     role_admin = get(guild.roles, name='Админ')
     role_past_admin = get(guild.roles, name='Бивш Админ')
 
-    admins = get_members_with_role(guild, role_admin)
-    for admin in admins:
+    await bot_log.send('Благодарим на Админите:')
+
+    for admin in get_members_with_role(guild, role_admin):
+        await bot_log.send(f'{admin.mention}')
+
         await remove_all_roles(admin)
         await member.add_roles(role_past_admin)
 
-async def update_students(guild):
-    old_roles = []
-    old_roles.append(get(guild.roles, name='8ми клас'))
-    old_roles.append(get(guild.roles, name='9ти клас'))
-    old_roles.append(get(guild.roles, name='10ти клас'))
-    old_roles.append(get(guild.roles, name='11ти клас'))
+    await bot_log.send(f'Добре дошли в клуба {role_past_admin.mention}')
 
-    new_roles = old_roles
-    new_roles.remove(get(guild.roles, name='8ми клас'))
-    new_roles.append(get(guild.roles, name='12ти клас'))
+async def update_students(guild, bot_log):
+    role_08 = get(guild.roles, name='8ми клас')
+    role_09 = get(guild.roles, name='9ти клас')
+    role_10 = get(guild.roles, name='10ти клас')
+    role_11 = get(guild.roles, name='11ти клас')
+    role_12 = get(guild.roles, name='12ти клас')
 
-    for old_role in old_roles:
-        for new_role in new_roles:
-            await update_roles(guild, old_role, new_role)
+    roles = {
+        role_11: role_12,
+        role_10: role_11,
+        role_09: role_10,
+        role_08: role_09
+    }
+
+    for old_role, new_role in roles.items():
+        await bot_log.send(f'{old_role.mention}, добре дошли в {new_role.mention}')
+        await update_roles(guild, old_role, new_role)
 
 async def update_alumni(guild):
     role_12 = get(guild.roles, name='12ти клас')
 
-    alumni = get_members_with_role(guild, role_12)
-    for student in alumni:
+    for student in get_members_with_role(guild, role_12):
         await remove_all_roles(student)
         await kick_and_dm(student)
 
-async def update(guild, ctx):
-    await ctx.send('Админ -> Бивш Админ')
-    await update_admins(guild)
+# ----------------------------------------------------------------
 
-    await ctx.send('Казваме ДОВИЖДАНЕ на 12ти клас! :wave:')
+async def roles_update():
+    guild = get(bot.guilds, name=GUILD)
+    bot_log = get(guild.channels, name='bot-log')
+
+    await bot_log.send('Starting Update!')
+
+    await update_admins(guild, bot_log)
+
+    await bot_log.send('Казваме ДОВИЖДАНЕ на 12ти клас! :wave:')
     await update_alumni(guild)
 
-    await ctx.send('Добре дошли на следващото ниво!')
-    await update_students(guild)
+    await update_students(guild, bot_log)
+    await bot_log.send('Добре дошли на следващото ниво! :arrow_double_up:')
+
+    await bot_log.send('Update finished!')
+
+# ----------------------------------------------------------------
+
+async def test():
+    guild = get(bot.guilds, name=GUILD)
+    bot_log = get(guild.channels, name='bot-log')
+
+    await bot_log.send('Test on specific date!')
+    await bot_log.send('Today should be 01.02.2021 12:00')
 
 @bot.event
 async def on_ready():
@@ -107,16 +134,10 @@ async def on_ready():
         f'*** Bot is ready ***'
     )
 
-@bot.command(name='test')
-async def test(ctx):
-    await ctx.send('Test from TUES BOT!')
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(test, CronTrigger.from_crontab('0 12 1 FEB *'))
+    # scheduler.add_job(roles_update, CronTrigger.from_crontab('0 12 15 SEP *'))
+    scheduler.start()
 
-@bot.command(name='update')
-async def roles(ctx):
-    guild = get(bot.guilds, name=GUILD)
-
-    await ctx.send('Starting Update!')
-    await update(guild, ctx)
-    await ctx.send('Update finished!')
-
-bot.run(TOKEN, bot=True)
+if __name__ == '__main__':
+    bot.run(TOKEN, bot=True)
