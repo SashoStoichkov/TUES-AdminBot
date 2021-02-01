@@ -1,4 +1,4 @@
-import os, datetime
+import os
 
 import discord
 from discord.utils import get
@@ -134,12 +134,10 @@ async def on_ready():
         f'*** Bot is ready ***'
     )
 
-    # scheduler = AsyncIOScheduler()
-    # scheduler.add_job(test, CronTrigger.from_crontab('0 12 1 FEB *'))
-    # # scheduler.add_job(roles_update, CronTrigger.from_crontab('0 12 15 SEP *'))
-    # scheduler.start()
-
-    print(datetime.datetime.now())
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(test, CronTrigger.from_crontab('30 8 1 FEB *')) # 10:30
+    # scheduler.add_job(roles_update, CronTrigger.from_crontab('0 12 15 SEP *'))
+    scheduler.start()
 
 if __name__ == '__main__':
     bot.run(TOKEN, bot=True)
