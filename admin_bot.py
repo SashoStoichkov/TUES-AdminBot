@@ -1,4 +1,4 @@
-import os
+import os, datetime
 
 import discord
 from discord.utils import get
@@ -39,8 +39,8 @@ async def kick_and_dm(member):
     dm = await member.create_dm()
 
     # TODO: Think of kick dm
-    # await dm.send(f'Hello, {member.mention}')
-    # await dm.send('You have been kicked from the server. Have a nice life :)')
+    await dm.send(f'Здравей, {member.mention}')
+    await dm.send('You have been kicked from the server. Have a nice life :)')
 
     await member.kick(reason='TUES IS OVER.')
 
@@ -134,10 +134,12 @@ async def on_ready():
         f'*** Bot is ready ***'
     )
 
-    scheduler = AsyncIOScheduler()
-    scheduler.add_job(test, CronTrigger.from_crontab('0 12 1 FEB *'))
-    # scheduler.add_job(roles_update, CronTrigger.from_crontab('0 12 15 SEP *'))
-    scheduler.start()
+    # scheduler = AsyncIOScheduler()
+    # scheduler.add_job(test, CronTrigger.from_crontab('0 12 1 FEB *'))
+    # # scheduler.add_job(roles_update, CronTrigger.from_crontab('0 12 15 SEP *'))
+    # scheduler.start()
+
+    print(datetime.datetime.now())
 
 if __name__ == '__main__':
     bot.run(TOKEN, bot=True)
