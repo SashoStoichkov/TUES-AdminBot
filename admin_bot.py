@@ -70,7 +70,7 @@ async def on_ready():
         required = True
     )
   ],
-  guild_ids=[utils.GUILD_ID]
+  guild_ids=[797018153406300160]
 )
 async def _setup(ctx, number: str, letter: str, name: str):
     if number not in ['8', '9', '10', '11', '12'] or letter not in ['А', 'Б', 'В', 'Г']:

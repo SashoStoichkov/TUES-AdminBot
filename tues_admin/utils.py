@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
-GUILD_ID = os.getenv('GUILD_ID')
 
 from discord.utils import get
 
