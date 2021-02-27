@@ -5,6 +5,7 @@ async-timeout==3.0.1
 attrs==20.3.0
 chardet==3.0.4
 croniter==1.0.5
+discord-py-slash-command==1.0.9.5
 discord.py==1.6.0
 future==0.18.2
 idna==3.1
