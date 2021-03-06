@@ -24,14 +24,15 @@ def get_members_with_role(guild, role):
 async def remove_all_roles(member):
     await member.edit(roles=[])
 
-async def kick_and_dm(member):
+async def update_and_dm(member, role_alumni):
     dm = await member.create_dm()
 
     await dm.send(f':wave: Здравей, {member.mention}')
     await dm.send(':tada: Честито завършване!')
     await dm.send(':star2: С пожелание за успехи, както в професионален, така и в личен план!')
 
-    await member.kick(reason='TUES IS OVER.')
+    await member.edit(nick=member.nick[:-4])
+    await member.add_roles(role_alumni)
 
 async def update_roles(guild, old_role, new_role):
     members = get_members_with_role(guild, old_role)
