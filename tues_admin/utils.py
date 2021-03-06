@@ -1,4 +1,4 @@
-import os
+import os, datetime
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -31,7 +31,8 @@ async def update_and_dm(member, role_alumni):
     await dm.send(':tada: Честито завършване!')
     await dm.send(':star2: С пожелание за успехи, както в професионален, така и в личен план!')
 
-    await member.edit(nick=member.nick[:-4])
+    now = datetime.datetime.now()
+    await member.edit(nick=f'{member.nick[:-4]} ({now.year})')
     await member.add_roles(role_alumni)
 
 async def update_roles(guild, old_role, new_role):
