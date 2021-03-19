@@ -32,7 +32,7 @@ async def update_and_dm(member, role_alumni):
     await dm.send(':star2: С пожелание за успехи, както в професионален, така и в личен план!')
 
     now = datetime.datetime.now()
-    await member.edit(nick=f'{member.nick[:-4]} ({now.year})')
+    await member.edit(nick=f'{member.nick[:-6]} ({now.year})')
     await member.add_roles(role_alumni)
 
 async def update_roles(guild, old_role, new_role):
