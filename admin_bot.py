@@ -92,7 +92,7 @@ async def _setup(ctx, number: str, letter: str, name: str):
         all_role = get(guild.roles, name='Отговорници')
 
         await member.add_roles(all_role, roles[number])
-        await member.edit(nick=f'{name} ({letter})')
+        await member.edit(nick=f'{name} ({number}{letter})')
 
 if __name__ == '__main__':
     bot.run(utils.TOKEN, bot=True)
