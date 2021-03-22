@@ -6,8 +6,6 @@ async def update_admins(guild, bot_log):
     role_admin = get(guild.roles, name='Админ')
     role_past_admin = get(guild.roles, name='Бивш Админ')
 
-    await bot_log.send('Благодарим на Админите:')
-
     for admin in utils.get_members_with_role(guild, role_admin):
         await bot_log.send(f'{admin.mention}')
 
@@ -15,6 +13,21 @@ async def update_admins(guild, bot_log):
         await admin.add_roles(role_past_admin)
 
     await bot_log.send(f'Добре дошли в клуба {role_past_admin.mention}')
+
+async def update_hacktues(guild):
+    role_11 = get(guild.roles, name='11ти клас')
+    role_12 = get(guild.roles, name='12ти клас')
+
+    hacktues = get(guild.roles, name='HackTUES')
+    alumni = get(guild.roles, name='Завършили')
+
+    for member in utils.get_members_with_role(guild, hacktues):
+        if role_11 in member.roles:
+            await member.remove_roles(role_11)
+            await member.add_roles(role_12)
+        elif role_12 in member.roles:
+            await member.remove_roles(role_12)
+            await utils.update_and_dm(member, alumni, True)
 
 async def update_students(guild, bot_log):
     role_08 = get(guild.roles, name='8ми клас')
@@ -40,4 +53,4 @@ async def update_alumni(guild):
 
     for student in utils.get_members_with_role(guild, role_12):
         await utils.remove_all_roles(student)
-        await utils.update_and_dm(student, role_alumni)
+        await utils.update_and_dm(student, role_alumni, False)
