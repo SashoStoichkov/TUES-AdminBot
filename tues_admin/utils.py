@@ -24,15 +24,21 @@ def get_members_with_role(guild, role):
 async def remove_all_roles(member):
     await member.edit(roles=[])
 
-async def update_and_dm(member, role_alumni):
+async def update_and_dm(member, role_alumni, hacktues):
     dm = await member.create_dm()
 
     await dm.send(f':wave: Здравей, {member.mention}')
     await dm.send(':tada: Честито завършване!')
     await dm.send(':star2: С пожелание за успехи, както в професионален, така и в личен план!')
 
+    name = ''
+    if hacktues:
+        name = member.nick
+    else:
+        name = member.nick[:-6]
+
     now = datetime.datetime.now()
-    await member.edit(nick=f'{member.nick[:-6]} ({now.year})')
+    await member.edit(nick=f'{name} ({now.year})')
     await member.add_roles(role_alumni)
 
 async def update_roles(guild, old_role, new_role):
