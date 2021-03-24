@@ -47,8 +47,6 @@ async def on_ready():
         f'*** Bot is up-and-running ***'
     )
 
-    await roles_update()
-
     scheduler = AsyncIOScheduler()
     scheduler.add_job(roles_update, CronTrigger.from_crontab('0 8 15 SEP *')) # 10:00
     scheduler.start()
