@@ -83,7 +83,7 @@ async def _setup(ctx, number: str, letter: str, name: str):
         await ctx.respond()
 
         member = ctx.author
-        guild = ctx.message.guild
+        guild = ctx.guild
 
         roles = {
             '8': get(guild.roles, name='8ми клас'),
@@ -115,7 +115,7 @@ async def _ht(ctx, name: str):
     await ctx.respond()
 
     member = ctx.author
-    guild = ctx.message.guild
+    guild = ctx.guild
 
     ht_role = get(guild.roles, name='HackTUES')
     role_11 = get(guild.roles, name='11ти клас')
