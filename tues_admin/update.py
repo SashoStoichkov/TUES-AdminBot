@@ -15,6 +15,7 @@ async def update_admins(guild, bot_log):
     await bot_log.send(f'Добре дошли в клуба {role_past_admin.mention}')
 
 async def update_hacktues(guild):
+    role_10 = get(guild.roles, name='10ти клас')
     role_11 = get(guild.roles, name='11ти клас')
     role_12 = get(guild.roles, name='12ти клас')
 
@@ -22,7 +23,10 @@ async def update_hacktues(guild):
     alumni = get(guild.roles, name='Завършили')
 
     for member in utils.get_members_with_role(guild, hacktues):
-        if role_11 in member.roles:
+        if role_10 in member.roles:
+            await member.remove_roles(role_10)
+            await member.add_roles(role_11)
+        elif role_11 in member.roles:
             await member.remove_roles(role_11)
             await member.add_roles(role_12)
         elif role_12 in member.roles:
